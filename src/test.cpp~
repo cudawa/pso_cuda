@@ -1,0 +1,92 @@
+//#include "particle.h"
+#include "swarm.h"
+#include <iostream>
+using namespace pmr;
+
+//Unit Test
+int randomParticleTest();
+void randTest();
+void swarmTest();
+void PoseMultiTest();
+void swarmComputeTest();
+
+int main(int argc, char** argv)
+{
+  swarmComputeTest();
+}
+
+void swarmComputeTest()
+{
+  math::Swarm sw;
+  math::Pose target(0.15,-0.23,-0.001,M_PI/2.3,-M_PI/4.3, M_PI/5.7);
+  math::Pose minBound(-1,-1,-1,-M_PI/2,-M_PI/2,-M_PI/2);
+  math::Pose maxBound(1,1,1,M_PI/2,M_PI/2,M_PI/2);
+  math::Pose minVel(-0.1,-0.1,-0.1,-M_PI/90,-M_PI/90,-M_PI/90);
+  math::Pose maxVel(0.1,0.1,0.1,M_PI/90,M_PI/90,M_PI/90);
+  sw.setTarget(target);
+  sw.setSearchSpaceBound(minBound,maxBound);
+  sw.setSearchSpeedBound(minVel,maxVel);
+  sw.setMaxIteration(100);
+  sw.setPopulationSize(20);
+  math::PSOSolution sol=sw.compute();
+  std::cout<<"======================================"<<std::endl;
+  std::cout<<">>> target Pose:"<<std::endl<<target<<std::endl;
+  std::cout<<">>> compute finished!"<<std::endl
+    <<"best pose: "<<sol.gbest_pose<<std::endl
+    <<"best trans score: "<<sol.gbestTrans_value<<std::endl
+    <<"best rot score: "<<sol.gbestRot_value<<std::endl;
+}
+
+void PoseMultiTest()
+{
+  math::Pose p(0.1,0.2,0.3,0.01,0.02,0.03);
+  std::cout<<p;
+
+  double d=10.0;
+  p=d*p;
+  std::cout<<p;
+}
+
+void swarmTest()
+{
+  math::Swarm sw;
+  sw.setPopulationSize(10);
+  //sw.initialize();
+  std::cout<<"initialize swarm finished"<<std::endl;
+  for(int i=0;i<sw.getPopulationSize();++i)
+  {
+    std::cout<<"Paticle "<<i<<":  "<<
+      sw.particles.at(i).pose.x<<"  "<<
+      sw.particles.at(i).pose.y<<"  "<<
+      sw.particles.at(i).pose.z<<"  "<<
+      sw.particles.at(i).pose.phi<<"  "<<
+      sw.particles.at(i).pose.theta<<"  "<<
+      sw.particles.at(i).pose.psi<<std::endl;
+  }
+}
+
+void randTest()
+{
+  double r1=rand()%100*0.01;
+  double r2=rand()%100*0.01;
+  double r3=rand()%100*0.01;
+  std::cout<<"r1= "<<r1<<std::endl;
+  std::cout<<"r2= "<<r2<<std::endl;
+  std::cout<<"r3= "<<r3<<std::endl;
+}
+int randomParticleTest()
+{
+  math::Particle par;
+  std::cout<<"generate first particle:"<<std::endl;
+  std::cout<<"velocity: "<<par.velocity;
+
+  std::cout<<"pbest_pose:"<<std::endl;
+  std::cout<<par.pbest_pose;
+  
+  math::Particle par1;
+  std::cout<<"generate second particle:"<<std::endl;
+  std::cout<<"velocity: "<<par1.velocity;
+  
+  std::cout<<"pbest_pose:"<<std::endl;
+  std::cout<<par1.pbest_pose;
+}
